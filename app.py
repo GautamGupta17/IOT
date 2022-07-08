@@ -1,99 +1,60 @@
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-
-import pickle
-import requests
-import time
-import json
-
-from sklearn.pipeline import Pipeline
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-
-from sklearn.feature_selection import SelectKBest, f_regression
+import pandas as pd 
+from matplotlib import pyplot as plt
+from plotly import graph_objs as go
 from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import cross_val_score, train_test_split
+import numpy as np 
 
-def timetaken(quality):
-        if (quality>=9.15):
-            time = (quality - 9.15 ) / 0.003979646611374403
-            return("Food is fresh. Consume it under ", round(time) , " mins")
-        if (quality>=8.7 and quality < 9.15):
-            time = (quality - 8.7 ) / 0.001877660059602652
-            return("Food is cold and needs to be reheated. Heat and eat before", round(time) ," mins")
-        if (quality>=7.8 and quality < 8.7) :
-            time = (quality - 7.8 ) /  0.0024480416168478265
-            return("Time left to spoil=" , round(time) ," mins. Store in the refrigerator before", round(time) ,"mins")
-        elif (quality< 7.8):
-            return("Food is spoiled, discard it.")
 
-url1 = "https://api.thingspeak.com/channels/1785779/feeds/last.json?api_key=64LX24ENHBDW3JZV"
-url2 = "https://api.thingspeak.com/channels/1780792/feeds/last.json?api_key=6PKCOVRLO9U2HFJ7"
-url3 = "https://api.thingspeak.com/channels/1744711/feeds/last.json?api_key=LQYCBT76OZKU05HV"
-url4 = "https://api.thingspeak.com/channels/1744701/feeds/last.json?api_key=2HY016JWRK0O7IFI"
+data = pd.read_csv("data//Salary_Data.csv")
+x = np.array(data['YearsExperience']).reshape(-1,1)
+lr = LinearRegression()
+lr.fit(x,np.array(data['Salary']))
 
-while True:
-    response1 = requests.get(url1)
-    data_disc1 = json.loads(response1.text)
-    input1 =  data_disc1['field1']
 
-    response2 = requests.get(url2)
-    data_disc2 = json.loads(response2.text)
-    input2 =  data_disc2['field1']
-
-    response3 = requests.get(url3)
-    data_disc3 = json.loads(response3.text)
-    input3 = data_disc3['field1']
-
-    response4 = requests.get(url4)
-    data_disc4 = json.loads(response4.text)
-    input4 = data_disc4['field1']
-
+st.title("Salary Predictor")
+st.image("data//sal.jpg",width = 800)
+nav = st.sidebar.radio("Navigation",["Home","Prediction","Contribute"])
+if nav == "Home":
     
-    loaded_model = pickle.load(open('C:/Users/naren/Downloads/IOT_DAL/Streamlit app/trained_model.sav', 'rb'))
-
-    input_data = (input1 ,input2 ,input3, input4)
-    input_data = list(np.float_(input_data))
-    print(input_data)
+    if st.checkbox("Show Table"):
+        st.table(data)
     
-    input_data_as_numpy = np.asarray(input_data)
+    graph = st.selectbox("What kind of Graph ? ",["Non-Interactive","Interactive"])
 
-    input_data_reshaped = input_data_as_numpy.reshape(1,-1)
+    val = st.slider("Filter data using years",0,20)
+    data = data.loc[data["YearsExperience"]>= val]
+    if graph == "Non-Interactive":
+        plt.figure(figsize = (10,5))
+        plt.scatter(data["YearsExperience"],data["Salary"])
+        plt.ylim(0)
+        plt.xlabel("Years of Experience")
+        plt.ylabel("Salary")
+        plt.tight_layout()
+        st.pyplot()
+    if graph == "Interactive":
+        layout =go.Layout(
+            xaxis = dict(range=[0,16]),
+            yaxis = dict(range =[0,210000])
+        )
+        fig = go.Figure(data=go.Scatter(x=data["YearsExperience"], y=data["Salary"], mode='markers'),layout = layout)
+        st.plotly_chart(fig)
+    
+if nav == "Prediction":
+    st.header("Know your Salary")
+    val = st.number_input("Enter you exp",0.00,20.00,step = 0.25)
+    val = np.array(val).reshape(1,-1)
+    pred =lr.predict(val)[0]
 
-    prediction = loaded_model.predict(input_data_reshaped)
-    print(prediction)
+    if st.button("Predict"):
+        st.success(f"Your predicted salary is {round(pred)}")
 
-    q = prediction[0]
-    k = timetaken(q) 
-    print(k)
-
-    time.sleep(30)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if nav == "Contribute":
+    st.header("Contribute to our dataset")
+    ex = st.number_input("Enter your Experience",0.0,20.0)
+    sal = st.number_input("Enter your Salary",0.00,1000000.00,step = 1000.0)
+    if st.button("submit"):
+        to_add = {"YearsExperience":[ex],"Salary":[sal]}
+        to_add = pd.DataFrame(to_add)
+        to_add.to_csv("data//Salary_Data.csv",mode='a',header = False,index= False)
+        st.success("Submitted")
