@@ -16,7 +16,6 @@ from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score, train_test_split
 
-
 def timetaken(quality):
         if (quality>=9.15):
             time = (quality - 9.15 ) / 0.003979646611374403
@@ -30,32 +29,10 @@ def timetaken(quality):
         elif (quality< 7.8):
             return("Food is spoiled, discard it.")
 
-
-header = st.container()
-dataset = st.container()
-features = st.container()
-model_training = st.container()
-
-
 url1 = "https://api.thingspeak.com/channels/1785779/feeds/last.json?api_key=64LX24ENHBDW3JZV"
 url2 = "https://api.thingspeak.com/channels/1780792/feeds/last.json?api_key=6PKCOVRLO9U2HFJ7"
 url3 = "https://api.thingspeak.com/channels/1744711/feeds/last.json?api_key=LQYCBT76OZKU05HV"
 url4 = "https://api.thingspeak.com/channels/1744701/feeds/last.json?api_key=2HY016JWRK0O7IFI"
-
-df = pd.read_csv('TestFinal.csv')
-
-with header:
-    st.title('Welcome to my IOT PROJECT')
-    st.text('Here we will see how good is our cooked dal sample')
-with dataset:
-    st.header('Dal Dataset I created')
-    st.text('Created this dataset using arduino')
-
-with features:
-    st.header('The features I created')
-
-    st.markdown('*Ethanol*')
-    st.markdown('*Methane*')
 
 while True:
     response1 = requests.get(url1)
@@ -74,7 +51,8 @@ while True:
     data_disc4 = json.loads(response4.text)
     input4 = data_disc4['field1']
 
-    loaded_model = pickle.load(open('trained_model.sav', 'rb'))
+    
+    loaded_model = pickle.load(open('C:/Users/naren/Downloads/IOT_DAL/Streamlit app/trained_model.sav', 'rb'))
 
     input_data = (input1 ,input2 ,input3, input4)
     input_data = list(np.float_(input_data))
@@ -86,12 +64,36 @@ while True:
 
     prediction = loaded_model.predict(input_data_reshaped)
     print(prediction)
-    
+
     q = prediction[0]
     k = timetaken(q) 
+    print(k)
+
+    time.sleep(30)
 
 
-    with model_training:
-        st.text(k)
 
-    time.sleep(30)    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
