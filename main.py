@@ -146,7 +146,7 @@ with features:
     st.text("")
     st.text("")
 
-df1 = pd.read_csv('DAL_FINAL.csv')
+df1 = pd.read_csv('DAL_Final.csv')
 df2 = pd.read_csv('MILK_FINAL.csv')
 df3 = pd.read_csv('RICE_FINAL.csv')
 
