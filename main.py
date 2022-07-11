@@ -146,6 +146,10 @@ with features:
     st.text("")
     st.text("")
 
+df1 = pd.read_csv('DAL_FINAL.csv')
+df2 = pd.read_csv('MILK_FINAL.csv')
+df3 = pd.read_csv('RICE_FINAL.csv')
+
 
 with data:
     food = st.selectbox(
@@ -157,14 +161,11 @@ with data:
     col1.write("You have selected :")
     col2.write(food)
     if food=="Dal" :
- 
-        df = pd.read_csv('DAL_FINAL.csv')   
+        df = df1   
     elif food == "Milk" :
-
-        df = pd.read_csv('MILK_FINAL.csv')
+        df = df2
     else:
-
-        df=pd.read_csv('RICE_FINAL.CSV')
+        df=df3
     @st.cache
     def convert_df(df):
         # IMPORTANT: Cache the conversion to prevent computation on every rerun
