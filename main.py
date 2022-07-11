@@ -18,7 +18,7 @@ from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score, train_test_split
 from PIL import Image
-import graphviz as graphviz
+
 
 st.set_page_config(
     page_title="IOT FOOD MONITOR",
