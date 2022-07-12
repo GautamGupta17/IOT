@@ -32,14 +32,14 @@ st.set_page_config(
 def timetaken_DAL(quality):
         if (quality>=9.15):
             time = (quality - 9.05 ) / 0.003979646611374403
-            myvar1 = "Food is fresh. Consume it under "
+            myvar1 = "Dal is fresh. Consume it under "
             myvar2 = round(time)
             myvar3 = " mins. Enjoy your meal"
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
             #s = (str("Food is fresh. Consume it under") + round(time) + str("mins"))
         if (quality>=8.7 and quality < 9.15):
             time = (quality - 8.6 ) / 0.001877660059602652
-            myvar1 = "Food is cold and needs to be reheated. Heat and eat before "
+            myvar1 = "Dal is cold and needs to be reheated. Heat and eat before "
             myvar2 = round(time)
             myvar3 = " mins"
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
@@ -52,14 +52,14 @@ def timetaken_DAL(quality):
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
             #s = (str("Time left to spoil is") + round(time) + str("mins. Store in the refrigerator before") + round(time) + str("mins"))
         elif (quality< 7.8):
-            s = ("Food is spoiled, discard it.")
+            s = ("Dal is spoiled, discard it.")
 
         return s
 
 def timetaken_RICE(quality):
         if (quality>=9.1):
             time = (quality - 9.0 ) / 0.0005752517860538821
-            myvar1 = "Rice is fresh. Consume it under "
+            myvar1 = "Rice is fresh. And it can be consumed upto "
             myvar2 = round(time)
             myvar3 = " mins. Enjoy your meal."
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
@@ -84,21 +84,21 @@ def timetaken_RICE(quality):
         return s
 
 def timetaken_MILK(quality):
-        if (quality>=8.5):
-            time = (quality - 8.4 ) / 0.004739068958333333
+        if (quality>=8.2):
+            time = (quality - 8.1 ) / 0.004739068958333333
             myvar1 = "Milk is fresh. Consume it under "
             myvar2 = round(time)
             myvar3 = " mins. Enjoy your drink."
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
             #s = (str("Food is fresh. Consume it under") + round(time) + str("mins"))
-        if (quality>=7.8 and quality < 8.5):
-            time = (quality - 7.7 ) / 0.00810364128571428
+        if (quality>=7.5 and quality < 8.2):
+            time = (quality - 7.4 ) / 0.00810364128571428
             myvar1 = "Milk is cold and needs to be reheated. Bacteria may grow soon. Heat and consume before "
             myvar2 = round(time)
             myvar3 = " mins"
             s = ("{}{}{}".format(myvar1, myvar2, myvar3))
             #s = (str("Food is cold and needs to be reheated. Heat and eat before") + round(time)+ str(" mins"))
-        elif (quality< 7.8):
+        elif (quality< 7.5):
             s = ("Milk is spoiled, discard it.")
 
         return s
@@ -114,11 +114,11 @@ model_training = st.container()
 with header:
 
 
-    st.title("PROJECT - REALTIME FOOD SPOILAGE PREDICTION USING IOT")
+    st.title("PROJECT - FOOD QUALITY MONITORING SYSTEM USING IOT")
     st.text("")
     st.text("")
     with st.expander("We can predict how long a food item can last"):
-        st.write("Here we have used machine learning models to train our model to predict how long our food items can be stored for before they are deemed unfit for out consumption. Check it our for yourself !!")
+        st.write("Here we have used machine learning algorithms to train our model to predict how long our food items can be stored for before they are deemed unfit for out consumption. Check it our for yourself !!")
     st.text("")
     st.text("")
     
@@ -186,8 +186,6 @@ with data:
 
 
 
-
-
 def CheckFood():
     while True:
     
@@ -221,9 +219,9 @@ def CheckFood():
         elif food=="Rice" :
             loaded_model = pickle.load(open('trained_model_rice.sav', 'rb'))
 
-
-
+        
         input_data = (input1 ,input2 ,input3, input4)
+
         input_data = list(np.float_(input_data))                                #methane, ethanol, humidity, temp 
         print(input_data)
 
