@@ -58,7 +58,7 @@ def timetaken_DAL(quality):
 
 def timetaken_RICE(quality):
         if (quality>=9.1):
-            time = (quality - 9.0 ) / 0.005752517860538821
+            time = (quality - 9.0 ) / 0.007752517860538821
             myvar1 = "Rice is fresh. And it can be consumed upto "
             myvar2 = round(time)
             myvar3 = " mins. Enjoy your meal."
